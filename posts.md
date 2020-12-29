@@ -1,6 +1,6 @@
 ---
 layout: allposts
 title: Posts
-description: Blog posts
+description: Post
 permalink: /posts/
 ---

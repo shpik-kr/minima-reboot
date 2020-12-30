@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Harekaze Mini CTF 2020 writeup"
-date: 2019-08-12 15:00
+date: 2020-12-30 15:00
 categories: CTF 
 ---
 

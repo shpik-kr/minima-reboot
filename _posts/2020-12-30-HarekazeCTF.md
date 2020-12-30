@@ -7,7 +7,7 @@ categories: CTF
 
 1st placed at NekoLover(@shpik)
 
-I attended to Harekaze Mini CTF 2020 with `JJY`, `rbtree`, `03sunf`, and we god a first place :). 
+I attended to Harekaze Mini CTF 2020 with `JJY`, `rbtree`, `03sunf`, and we got a first place :). 
 I wrote writeup on some of the challs I solved.
 
 It was a really fun CTF after a long time ago.
